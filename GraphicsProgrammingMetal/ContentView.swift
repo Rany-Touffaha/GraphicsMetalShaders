@@ -1,19 +1,25 @@
-//
-//  ContentView.swift
-//  GraphicsProgrammingMetal
-//
-//  Created by Rany Touffaha on 29/09/2025.
-//
-
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, Metal Shaders!")
+            Text("Color Effect!")
+                .font(.largeTitle)
+                .colorEffect(ShaderLibrary.myColorEffect())
+            
+            Text("Distortion Effect!")
+                .font(.largeTitle)
+                .distortionEffect(
+                    ShaderLibrary.myDistortionEffect(),
+                    maxSampleOffset: .zero
+                )
+
+            Text("Layer Effect!")
+                .font(.largeTitle)
+                .layerEffect(
+                    ShaderLibrary.myLayerEffect(),
+                    maxSampleOffset: .zero
+                )
         }
         .padding()
     }
