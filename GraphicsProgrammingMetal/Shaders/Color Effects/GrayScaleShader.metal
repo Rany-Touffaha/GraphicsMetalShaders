@@ -2,10 +2,9 @@
 using namespace metal;
 
 // Color Effect Snippet
-[[ stitchable ]] half4 grayScaleShader(float2 position, half4 color) {
-    half4 weights = half4(0.2126, 0.7152, 0.0722, 0);
+[[ stitchable ]] half4 grayScaleShader(float2 position, half4 color, float4 weights) {
     
-    half brightness = dot(weights, color);
+    half brightness = dot(half4(weights), color);
     
     return half4(brightness,brightness,brightness,1);
 }

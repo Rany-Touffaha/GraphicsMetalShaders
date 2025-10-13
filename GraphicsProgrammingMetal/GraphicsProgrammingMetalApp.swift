@@ -11,7 +11,8 @@ import SwiftUI
 struct GraphicsProgrammingMetalApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Gray_Scale_View()
+                .modelContainer(for:WeightsModel.self)
         }
     }
 }
