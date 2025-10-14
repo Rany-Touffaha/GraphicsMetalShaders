@@ -58,3 +58,24 @@ using namespace metal;
         maxSampleOffset: .zero
     )
  */
+
+// Color Effect Snippet with Size parameter
+[[ stitchable ]] half4 ColorEffectWithSize(float2 position, half4 color, float2 size) {
+    float2 uv = position / size; //normalise values between 0 and 1
+    
+    half4 result = half4(uv.x, uv.y, 0, 1);
+    
+    return result;
+}
+/*
+ Text("Color Effect with Size parameter!")
+ .font(.largeTitle)
+ .visualEffect {
+     content, proxy in
+     content.colorEffect(
+         ShaderLibrary.ColorEffectWithSize(
+             .float2(proxy.size)
+         )
+     )
+ }
+ */
