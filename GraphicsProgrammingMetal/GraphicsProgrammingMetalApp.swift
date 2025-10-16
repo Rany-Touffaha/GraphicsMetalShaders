@@ -11,8 +11,7 @@ import SwiftUI
 struct GraphicsProgrammingMetalApp: App {
     var body: some Scene {
         WindowGroup {
-            Gray_Scale_View()
-                .modelContainer(for:WeightsModel.self)
+            OpacityZeroCircle()
         }
     }
 }
