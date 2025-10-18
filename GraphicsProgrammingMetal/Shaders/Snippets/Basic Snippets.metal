@@ -79,3 +79,106 @@ using namespace metal;
      )
  }
  */
+
+// Layer effect Snippet with Size parameter
+[[ stitchable ]] half4 LayerEffectWithSize(float2 position, SwiftUI::Layer layer, float2 size) {
+    
+    return half4(0,0,1,1);
+}
+/*
+ Text("Color Effect with Size parameter!")
+ .font(.largeTitle)
+ .visualEffect {
+     content, proxy in
+     content
+        .layerEffect(
+         ShaderLibrary.LayerEffectWithSize(
+             .float2(proxy.size),
+         )
+            maxSampleOffset: .zero
+     )
+ }
+ */
+
+// Using Timeline with size and time parameters
+
+// Color Effect Snippet with Size and Time parameter
+[[ stitchable ]] half4 ColorEffectWithTimeAndSize(float2 position, half4 color, float2 size, float time) {
+    
+    float2 uv = position / size; //normalise values between 0 and 1
+    
+    half4 result = half4(uv.x, uv.y, 0, 1);
+    
+    return result;
+}
+/*
+ private let startDate = Date()
+ 
+ TimelineView(.animation) { _ in
+     Text("Color Effect with Time and Size")
+         .font(.largeTitle)
+         .visualEffect {
+             content, proxy in
+             content
+                .layerEffect(
+                 ShaderLibrary.ColorEffectWithTimeAndSize(
+                     .float2(proxy.size),
+                     .float(startDate.timeIntervalSinceNow)
+                 )
+                    maxSampleOffset: .zero
+             )
+         }
+ }
+ */
+
+// Distortion Effect Snippet with Size and Time parameters
+[[ stitchable ]] float2 DistortionEffectWithTimeAndSize(float2 position, float2 size, float time) {
+    float2 result = float2(position.x,
+                           position.y+2*sin(position.x));
+    
+    return result;
+}
+/*
+ private let startDate = Date()
+ 
+ TimelineView(.animation) { _ in
+     Text("Color Effect with Time and Size")
+         .font(.largeTitle)
+         .visualEffect {
+             content, proxy in
+             content
+                 .distortionEffect(
+                     ShaderLibrary.DistortionEffectWithTimeAndSize(
+                        .float2(proxy.size),
+                        .float(startDate.timeIntervalSinceNow)
+                     ),
+                     maxSampleOffset: .zero
+                 )
+         }
+ }
+ */
+
+// Layer effect Snippet with Size parameter
+[[ stitchable ]] half4 LayerEffectWithTimeAndSize(float2 position, SwiftUI::Layer layer, float2 size, float time) {
+    
+    return half4(0,0,1,1);
+}
+/*
+ private let startDate = Date()
+ 
+ TimelineView(.animation) { _ in
+     Text("Layer Effect with Time and Size parameters")
+     .font(.largeTitle)
+     .visualEffect {
+         content, proxy in
+         content
+            .layerEffect(
+             ShaderLibrary.LayerEffectWithTimeAndSize(
+                 .float2(proxy.size),
+                 .float(startDate.timeIntervalSinceNow)
+             )
+                maxSampleOffset: .zero
+         )
+     }
+ }
+ */
