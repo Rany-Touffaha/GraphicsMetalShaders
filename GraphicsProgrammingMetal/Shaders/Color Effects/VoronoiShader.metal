@@ -56,11 +56,15 @@ using namespace metal;
     float minDistance = 1.0;
     
     for (int i = 0; i < 30; i++) {
-        float distance = length(uv - seedPoints[i]);
+        
+        float2 osc = 0.05 * float2(sin(time + i), cos(time + i));
+        float2 animatedSeed = seedPoints[i] + osc;
+        
+        float distance = length(uv - animatedSeed);
         
         if (distance < minDistance) {
             minDistance = distance;
-            result = seedColors[i];
+            result = mix(seedColors[i], seedColors[(i+1)%30], 0.3+0.7*abs(sin(time)));
         }
     }
     
