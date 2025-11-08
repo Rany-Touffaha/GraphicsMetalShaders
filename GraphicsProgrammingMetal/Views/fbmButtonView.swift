@@ -18,8 +18,7 @@ struct fbmButtonView: View {
         self.startDate = startDate
     }
     
-    
-    var body: some View {
+    var mainText: some View {
         Text(text)
             .foregroundStyle(.white)
             .font(.title)
@@ -27,9 +26,39 @@ struct fbmButtonView: View {
             .bold()
             .padding()
             .background(.black)
+    }
+    
+    var body: some View {
+        ZStack {
+            TimelineView(.animation) { context in
+                mainText
+                    .fbmShader(
+                        time: context.date.timeIntervalSince1970 - startDate.timeIntervalSince1970 + timeOffset,
+                        enabled: enabled
+                    )
+            }
             .clipShape(Capsule())
+        }
     }
 }
+
+extension View {
+    func fbmShader(time: Double, enabled: Bool) -> some View {
+        self
+            .colorEffect(
+                ShaderLibrary
+                    .fbmShader(
+                        .boundingRect,
+                        .float(time)
+                    ),
+                isEnabled: enabled
+            )
+    }
+    
+    
+    
+}
+
 
 #Preview {
     fbmButtonView(text: "Press Me")
