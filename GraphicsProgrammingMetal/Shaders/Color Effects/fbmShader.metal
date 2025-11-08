@@ -41,10 +41,50 @@ float fbm(float2 p, half3 a) {
     return v;
 }
 
+half3 drawLines(float2 uv, float time) {
+    
+    float timeVal = time;
+    timeVal *= 0.05;
+    
+    half sinTime = abs(sin(timeVal));
+    half cosTime = abs(cos(timeVal));
+    
+    half3 finalColor = half3(0.0);
+    half3 colorSets[4] = {
+        half3(0.7*sinTime, 0.05*cosTime,sinTime),
+        half3(sinTime,0.19,0.0),
+        half3(0.0,cosTime,0.3),
+        half3(0.0,0.38,1.0)
+    };
+    
+    for(int i = 0; i <4; ++i) {
+        float indexAsFloat = float(i);
+        float amp = 10.0 + indexAsFloat*0.1;
+        float period = 2.0 + indexAsFloat*2.0;
+        float thickness = mix(0.4,0.2,noise(uv*2.0));
+        
+        float t = abs(1. / (sin(uv.y + fbm(uv + timeVal*period, half3(1.0)))*amp)*thickness);
+        
+        finalColor += t*colorSets[i];
+        
+        
+    }
+    
+    return finalColor;
+}
 
 
 // Color Effect Snippet with Size and Time parameter
 [[ stitchable ]] half4 fbmShader(float2 position, half4 color, float4 bounds, float time) {
+    float2 uv = (position / bounds.w) - 1.0;
+    uv *= 1.5;
     
-    return half4(1.0, 0.0, 0.0, 1.0);
+    half3 finalColor = half3(0.0);
+    
+    int glowFactor = 1;
+    for(int i = 0; i < glowFactor; ++i){
+        finalColor += drawLines(uv, abs(time));
+    }
+    
+    return half4(finalColor, 1.0);
 }
