@@ -8,7 +8,7 @@ float2 hash(float2 p)
     return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
 }
 
-float noise(float2 p)
+float noiseFireShader(float2 p)
 {
     const float K1 = 0.366025404;
     const float K2 = 0.211324865;
@@ -31,20 +31,46 @@ float fbm(float2 uv)
 {
     float f;
     float2x2 m = float2x2(1.6, 1.2, -1.2, 1.6);
-    f = 0.5000*noise(uv); uv = m*uv;
-    f = 0.2500*noise(uv); uv = m*uv;
-    f = 0.1250*noise(uv); uv = m*uv;
-    f = 0.0625*noise(uv); uv = m*uv;
-    f = 0.5 + 0.5*f;
+    f = 0.5000*noiseFireShader(uv); uv = m*uv;
+    f += 0.2500*noiseFireShader(uv); uv = m*uv;
+    f += 0.1250*noiseFireShader(uv); uv = m*uv;
+    f += 0.0625*noiseFireShader(uv); uv = m*uv;
+    f += 0.5 + 0.5*f;
     return f;
 }
 
-
 [[ stitchable ]] half4 fireShader(float2 position, half4 color, float2 size, float time) {
     
-    float2 uv = position / size; //normalise values between 0 and 1
+    float2 uv = position / size;
     
-    half4 result = half4(uv.x, uv.y, 0, 1);
+    float2 q = uv;
+    q.x *= 5.;
+    q.y *= 2.;
+    float strength = floor(q.x + 1.);
+    float T3 = max(3., 1.25 * strength) * time;
+    
+    float floatPart = 1.;
+    q.x = modf(q.x, floatPart) - 0.5;
+    q.y -= 0.25;
+    
+    float n = fbm(strength*q - float2(0,T3));
+    float c = 1. - 16. * pow( max(0., length(q*float2(1.8+q.y*1.5, 0.75)) - n * max(0., q.y+ 0.25)),1.2);
+    
+    float c1 = n * c * (1.5 - pow(2.50 * uv.y, 4.));
+    c1=clamp(c1, 0., 1.);
+    
+    half3 col = half3(1.5*c1, 1.5*c1*c1*c1, c1*c1*c1*c1*c1*c1);
+    
+    #ifdef  BLUE_FLAME
+        col = col.xyz;
+    #endif
+    #ifdef GREEN_FLAME
+        col = 0.85*col.xyz;
+    #endif
+    
+    float a = c * (1. - pow(uv.y, 3.));
+    
+    half4 result = half4 ( mix(half3(0.), col, a), 1.0);
     
     return result;
 }

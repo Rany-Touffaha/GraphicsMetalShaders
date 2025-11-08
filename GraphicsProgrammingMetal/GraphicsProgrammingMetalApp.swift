@@ -4,7 +4,7 @@ import SwiftUI
 struct GraphicsProgrammingMetalApp: App {
     var body: some Scene {
         WindowGroup {
-            LavaLampView()
+            FireShaderView()
         }
     }
 }
